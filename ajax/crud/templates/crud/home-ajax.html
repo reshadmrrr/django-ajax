@@ -1,0 +1,58 @@
+<script>
+    $("#btn-save").click(function () {
+        console.log("Save Button Clicked");
+        let uid = $("#university_id-input").val();
+        let nm = $("#name-input").val();
+        let sm = $("#semester-input").val();
+        let pn = $("#phone_number-input").val();
+        let cs = $("input[name=csrfmiddlewaretoken]").val();
+        if (uid == "") {
+            console.log("Please enter university_id");
+        }
+        else if (nm == "") {
+            console.log("Please enter name");
+        }
+        else if (sm == "") {
+            console.log("Please enter semester");
+        }
+        else if (pn == "") {
+            console.log("Please enter phone_number");
+        }
+        else {
+            // console.log(uid);
+            // console.log(nm);
+            // console.log(sm);
+            // console.log(pn);
+
+            data = { university_id: uid, name: nm, semester: sm, phone_number: pn, csrfmiddlewaretoken: cs };
+            $.ajax({
+                url: "{% url 'save' %}",
+                method: "POST",
+                data: data,
+                success: function (data) {
+                    console.log(data.status);
+                    if (data.status == "Saved") {
+                        console.log("form submitted successfully");
+                        let latest_students = data.latest_students;
+                        let output = "";
+                        for (let i = 0; i < latest_students.length; i++) {
+                            output += '<tr><td>' + latest_students[i].university_id + '</td><td>' + latest_students[i].name + '</td><td>' + latest_students[i].semester + '</td><td>' + latest_students[i].phone_number + '</td><td><button class="btn btn-warning btn-sm btn-edit" id=' + latest_students[i].id + '>Edit</button> <button class="btn btn-danger btn-sm btn-del" id=' + latest_students[i].id + '>Delete</button></td></tr>';
+                        }
+                        // console.log(output);
+
+                        $("#tbody-ajax").html(output);
+                        $("form")[0].reset();
+                    } else if (data.status == 0) {
+                        console.log("form isn't submitted successfully");
+
+                    }
+                }
+            })
+        }
+    });
+
+
+
+
+
+</script>
