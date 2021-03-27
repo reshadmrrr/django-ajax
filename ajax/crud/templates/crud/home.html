@@ -20,6 +20,7 @@
                 <h4 class="text-center alert alert-info">Add/Update Student</h4>
                 <form action="" method="POST">
                     {% csrf_token %}
+                    <input type="hidden" name="stu-id" id="stuid" />
                     {{form.as_p}}
                 </form>
                 <input type="button" class="btn btn-success" id='btn-save' value="Save">

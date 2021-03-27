@@ -1,6 +1,7 @@
 <script>
     $("#btn-save").click(function () {
         console.log("Save Button Clicked");
+        let sid = $("#stuid").val();
         let uid = $("#university_id-input").val();
         let nm = $("#name-input").val();
         let sm = $("#semester-input").val();
@@ -24,7 +25,14 @@
             // console.log(sm);
             // console.log(pn);
 
-            data = { university_id: uid, name: nm, semester: sm, phone_number: pn, csrfmiddlewaretoken: cs };
+            data = {
+                stuid: sid,
+                university_id: uid,
+                name: nm,
+                semester: sm,
+                phone_number: pn,
+                csrfmiddlewaretoken: cs
+            };
             $.ajax({
                 url: "{% url 'save' %}",
                 method: "POST",
@@ -41,9 +49,12 @@
                         // console.log(output);
 
                         $("#tbody-ajax").html(output);
+                        $("#stuid").val("");
                         $("form")[0].reset();
                     } else if (data.status == 0) {
                         console.log("form isn't submitted successfully");
+                        $("#stuid").val("");
+                        // $("form")[0].reset();
 
                     }
                 }
@@ -63,6 +74,7 @@
             url: "{% url 'delete' %}",
             method: "POST",
             data: data,
+            dataType: "json",
             success: function (data) {
                 console.log(data);
                 if (data.status == 1) {
@@ -73,7 +85,31 @@
                 }
             }
 
-        })
+        });
+    });
+    $("#tbody-ajax").on("click", ".btn-edit", function () {
+        console.log("edit button clicked");
+        let id = $(this).attr("data-sid");
+        let cs = $("input[name=csrfmiddlewaretoken]").val();
+        console.log(id);
+        data = { sid: id, csrfmiddlewaretoken: cs };
+        // mythis = this;
+        $.ajax({
+            url: "{% url 'edit' %}",
+            method: "POST",
+            data: data,
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                $("#stuid").val(data.id);
+                $("#university_id-input").val(data.university_id);
+                $("#name-input").val(data.name);
+                $("#semester-input").val(data.semester);
+                $("#phone_number-input").val(data.phone_number);
+
+            }
+
+        });
     });
 
 
