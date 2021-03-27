@@ -36,7 +36,7 @@
                         let latest_students = data.latest_students;
                         let output = "";
                         for (let i = 0; i < latest_students.length; i++) {
-                            output += '<tr><td>' + latest_students[i].university_id + '</td><td>' + latest_students[i].name + '</td><td>' + latest_students[i].semester + '</td><td>' + latest_students[i].phone_number + '</td><td><button class="btn btn-warning btn-sm btn-edit" id=' + latest_students[i].id + '>Edit</button> <button class="btn btn-danger btn-sm btn-del" id=' + latest_students[i].id + '>Delete</button></td></tr>';
+                            output += '<tr><td>' + latest_students[i].university_id + '</td><td>' + latest_students[i].name + '</td><td>' + latest_students[i].semester + '</td><td>' + latest_students[i].phone_number + '</td><td><button class="btn btn-warning btn-sm btn-edit" value="edit" data-sid=' + latest_students[i].id + '>Edit</button> <button class="btn btn-danger btn-sm btn-del" value="delete" data-sid=' + latest_students[i].id + '>Delete</button></td></tr>';
                         }
                         // console.log(output);
 
@@ -52,7 +52,29 @@
     });
 
 
+    $("#tbody-ajax").on("click", ".btn-del", function () {
+        console.log("delete button clicked");
+        let id = $(this).attr("data-sid");
+        let cs = $("input[name=csrfmiddlewaretoken]").val();
+        console.log(id);
+        data = { sid: id, csrfmiddlewaretoken: cs };
+        mythis = this;
+        $.ajax({
+            url: "{% url 'delete' %}",
+            method: "POST",
+            data: data,
+            success: function (data) {
+                console.log(data);
+                if (data.status == 1) {
+                    console.log("data deleted successfully");
+                    $(mythis).closest("tr").fadeOut();
+                } else if (data.status == 0) {
+                    console.log("Unable to delete data.");
+                }
+            }
 
+        })
+    });
 
 
 </script>

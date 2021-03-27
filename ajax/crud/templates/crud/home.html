@@ -44,8 +44,10 @@
                             <td>{{student.semester}}</td>
                             <td>{{student.phone_number}}</td>
                             <td>
-                                <button class="btn btn-warning btn-sm btn-edit" id="{{student.id}}">Edit</button>
-                                <button class="btn btn-danger btn-sm btn-edit" id="{{student.id}}">Delete</button>
+                                <button class="btn btn-warning btn-sm btn-edit" value="edit"
+                                    data-sid="{{student.id}}">Edit</button>
+                                <button class="btn btn-danger btn-sm btn-del" value="delete"
+                                    data-sid="{{student.id}}">Delete</button>
                             </td>
                         </tr>
                         {% endfor %}
